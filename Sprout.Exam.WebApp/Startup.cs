@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sprout.Exam.Business.Interfaces;
 using Sprout.Exam.Business.Repositories;
+using Sprout.Exam.Business.Services;
 using Sprout.Exam.DataAccess.Data;
 using Sprout.Exam.DataAccess.Models;
 using System;
@@ -43,6 +44,8 @@ namespace Sprout.Exam.WebApp
 
             //Register Dependency injection
             services.AddScoped<IBaseRepository<Employee>, EmployeeRepository>();
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();

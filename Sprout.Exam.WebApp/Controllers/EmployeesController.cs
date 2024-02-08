@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Sprout.Exam.Business.DataTransferObjects;
 using Sprout.Exam.Common.Enums;
 using Sprout.Exam.Business.Interfaces;
+using AutoMapper;
+using Sprout.Exam.DataAccess.Models;
 
 namespace Sprout.Exam.WebApp.Controllers
 {
@@ -17,9 +19,11 @@ namespace Sprout.Exam.WebApp.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
-        public EmployeesController(IEmployeeService employeeService)
+        private readonly IMapper _mapper;
+        public EmployeesController(IEmployeeService employeeService, IMapper mapper)
         {
             _employeeService = employeeService;
+            _mapper = mapper;
         }
         /// <summary>
         /// Refactor this method to go through proper layers and fetch from the DB.
@@ -28,7 +32,9 @@ namespace Sprout.Exam.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = await _employeeService.GetAllEmployees();
+            var response = await _employeeService.GetAllEmployees();
+            var result = _mapper.Map<IEnumerable<EmployeeDto>>(response);
+
             return Ok(result);
         }
 
@@ -39,7 +45,8 @@ namespace Sprout.Exam.WebApp.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _employeeService.GetEmployeeById(id);
+            var response = await _employeeService.GetEmployeeById(id);
+            var result = _mapper.Map<EmployeeDto>(response);
             return Ok(result);
         }
 
@@ -50,8 +57,10 @@ namespace Sprout.Exam.WebApp.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, EditEmployeeDto input)
         {
-            //var item = await _employeeService.UpdateEmployee(id)
-            return Ok(input);
+            var result = _mapper.Map<Employee>(input);
+            var item = await _employeeService.UpdateEmployee(id, result);
+
+            return Ok(item);
         }
 
         /// <summary>
@@ -62,18 +71,10 @@ namespace Sprout.Exam.WebApp.Controllers
         public async Task<IActionResult> Post(CreateEmployeeDto input)
         {
 
-           var id = await Task.FromResult(StaticEmployees.ResultList.Max(m => m.Id) + 1);
+            var result = _mapper.Map<Employee>(input);
+            var response = await _employeeService.CreateNewEmployee(result);
 
-            StaticEmployees.ResultList.Add(new EmployeeDto
-            {
-                Birthdate = input.Birthdate.ToString("yyyy-MM-dd"),
-                FullName = input.FullName,
-                Id = id,
-                Tin = input.Tin,
-                TypeId = input.TypeId
-            });
-
-            return Created($"/api/employees/{id}", id);
+            return Ok(response);
         }
 
 
@@ -84,12 +85,10 @@ namespace Sprout.Exam.WebApp.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await Task.FromResult(StaticEmployees.ResultList.FirstOrDefault(m => m.Id == id));
-            if (result == null) return NotFound();
-            StaticEmployees.ResultList.RemoveAll(m => m.Id == id);
-            return Ok(id);
-        }
+            var result = await _employeeService.DeleteEmployee(id);
 
+            return Ok(result);
+        }
 
 
         /// <summary>
@@ -100,24 +99,11 @@ namespace Sprout.Exam.WebApp.Controllers
         /// <param name="workedDays"></param>
         /// <returns></returns>
         [HttpPost("{id}/calculate")]
-        public async Task<IActionResult> Calculate(int id,decimal absentDays,decimal workedDays)
+        public async Task<IActionResult> Calculate(int id, decimal absentDays, decimal workedDays)
         {
-            var result = await Task.FromResult(StaticEmployees.ResultList.FirstOrDefault(m => m.Id == id));
+            var result = await _employeeService.CalculateSalary(id, absentDays, workedDays);
 
-            if (result == null) return NotFound();
-            var type = (EmployeeType) result.TypeId;
-            return type switch
-            {
-                EmployeeType.Regular =>
-                    //create computation for regular.
-                    Ok(25000),
-                EmployeeType.Contractual =>
-                    //create computation for contractual.
-                    Ok(20000),
-                _ => NotFound("Employee Type not found")
-            };
-
+            return Ok(result);
         }
-
     }
 }

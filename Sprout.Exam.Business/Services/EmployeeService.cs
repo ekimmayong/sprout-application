@@ -68,5 +68,30 @@ namespace Sprout.Exam.Business.Services
 
             return "No update performed";
         }
+
+        public async Task<object> CalculateSalary(int employeeId, decimal absentDays, decimal workedDays)
+        {
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            decimal monthlySalary = (decimal)20000.00;
+            decimal dailySalary = (decimal)500.00;
+
+            if (employee != null)
+            {
+                switch (employee.EmployeeTypeId)
+                {
+                    case 1:
+                        var regularSalary = monthlySalary - ((monthlySalary / 22) * absentDays) - (monthlySalary * (decimal)0.12);
+                        return regularSalary;
+
+                    case 2:
+                        var contractualSalary = workedDays * dailySalary;
+                        return contractualSalary;
+
+                    default:
+                        return "Employee Type not found";
+                }
+            }
+            return "Employee not found";
+        }
     }
 }
