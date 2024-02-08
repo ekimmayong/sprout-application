@@ -1,16 +1,13 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Sprout.Exam.WebApp.Data;
-using Sprout.Exam.WebApp.Models;
+using Sprout.Exam.DataAccess.Data;
+using Sprout.Exam.DataAccess.Models;
 
 namespace Sprout.Exam.WebApp
 {
@@ -28,7 +25,10 @@ namespace Sprout.Exam.WebApp
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection"), options =>
+                    {
+                        options.EnableRetryOnFailure();
+                    }));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
