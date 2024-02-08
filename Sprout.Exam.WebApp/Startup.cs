@@ -6,8 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Sprout.Exam.Business.Interfaces;
+using Sprout.Exam.Business.Repositories;
 using Sprout.Exam.DataAccess.Data;
 using Sprout.Exam.DataAccess.Models;
+using System;
 
 namespace Sprout.Exam.WebApp
 {
@@ -38,9 +41,14 @@ namespace Sprout.Exam.WebApp
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
+            //Register Dependency injection
+            services.AddScoped<IBaseRepository<Employee>, EmployeeRepository>();
+
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
+            // Configure automapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllersWithViews();
             services.AddRazorPages();
 
