@@ -13,7 +13,7 @@ export class EmployeesIndex extends Component {
     this.populateEmployeeData();
   }
 
-  static renderEmployeesTable(employees,parent) {
+  static renderEmployeesTable(employees, parent) {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
@@ -26,7 +26,7 @@ export class EmployeesIndex extends Component {
           </tr>
         </thead>
         <tbody>
-          {employees.map(employee =>
+          { employees !== null && Array.isArray(employees) && employees.length > 0 ? employees.map(employee =>
             <tr key={employee.id}>
               <td>{employee.fullName}</td>
               <td>{employee.birthdate}</td>
@@ -41,7 +41,9 @@ export class EmployeesIndex extends Component {
               } 
             } }>Delete</button></td>
             </tr>
-          )}
+          ) :
+            <td>No Data available</td>
+          }
         </tbody>
       </table>
     );
@@ -50,7 +52,7 @@ export class EmployeesIndex extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : EmployeesIndex.renderEmployeesTable(this.state.employees,this);
+      : EmployeesIndex.renderEmployeesTable(this.state.employees.length != 0 ? this.state.employees : [] , this);
 
     return (
       <div>

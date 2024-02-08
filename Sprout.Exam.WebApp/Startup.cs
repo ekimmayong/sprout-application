@@ -11,7 +11,9 @@ using Sprout.Exam.Business.Repositories;
 using Sprout.Exam.Business.Services;
 using Sprout.Exam.DataAccess.Data;
 using Sprout.Exam.DataAccess.Models;
+using Sprout.Exam.WebApp.Middlewares;
 using System;
+using System.Text.Json;
 
 namespace Sprout.Exam.WebApp
 {
@@ -52,7 +54,14 @@ namespace Sprout.Exam.WebApp
 
             // Configure automapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddControllersWithViews();
+
+            services.AddControllersWithViews()
+                .AddJsonOptions(option =>
+                {
+                    option.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    option.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                });
+
             services.AddRazorPages();
 
             // In production, the React files will be served from this directory
@@ -76,6 +85,8 @@ namespace Sprout.Exam.WebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            //Global exception handler
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

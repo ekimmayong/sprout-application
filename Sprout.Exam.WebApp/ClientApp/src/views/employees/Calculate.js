@@ -6,7 +6,7 @@ export class EmployeeCalculate extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { id: 0,fullName: '',birthdate: '',tin: '',typeId: 1,absentDays: 0,workedDays: 0,netIncome: 0, loading: true,loadingCalculate:false };
+    this.state = { id: 0,fullName: '',birthdate: '',tin: '',typeId: 1,absentDays: 1,workedDays: 0,netIncome: 0, loading: true,loadingCalculate:false };
   }
 
   componentDidMount() {
@@ -23,6 +23,7 @@ export class EmployeeCalculate extends Component {
 
   render() {
 
+    console.log(this.state)
     let contents = this.state.loading
     ? <p><em>Loading...</em></p>
     : <div>
@@ -101,7 +102,7 @@ export class EmployeeCalculate extends Component {
     const requestOptions = {
         method: 'POST',
         headers: !token ? {} : { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
-        body: JSON.stringify({id: this.state.id,absentDays: this.state.absentDays,workedDays: this.state.workedDays})
+        body: JSON.stringify({absentDays: this.state.absentDays,workedDays: this.state.workedDays})
     };
     const response = await fetch('api/employees/' + this.state.id + '/calculate',requestOptions);
     const data = await response.json();

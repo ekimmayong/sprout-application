@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +69,6 @@ namespace Sprout.Exam.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(CreateEmployeeDto input)
         {
-
             var result = _mapper.Map<Employee>(input);
             var response = await _employeeService.CreateNewEmployee(result);
 
@@ -99,11 +97,11 @@ namespace Sprout.Exam.WebApp.Controllers
         /// <param name="workedDays"></param>
         /// <returns></returns>
         [HttpPost("{id}/calculate")]
-        public async Task<IActionResult> Calculate(int id, decimal absentDays, decimal workedDays)
+        public async Task<IActionResult> Calculate(int id, int absentDays, int workedDays)
         {
-            var result = await _employeeService.CalculateSalary(id, absentDays, workedDays);
+            //var result = await _employeeService.CalculateSalary(id, absentDays, workedDays);
 
-            return Ok(result);
+            return Ok();
         }
     }
 }
