@@ -97,11 +97,11 @@ namespace Sprout.Exam.WebApp.Controllers
         /// <param name="workedDays"></param>
         /// <returns></returns>
         [HttpPost("{id}/calculate")]
-        public async Task<IActionResult> Calculate(int id, int absentDays, int workedDays)
+        public async Task<IActionResult> Calculate(int id, WorkAndAbsentDaysDto data)
         {
-            //var result = await _employeeService.CalculateSalary(id, absentDays, workedDays);
+            var result = await _employeeService.CalculateSalary(id, data.AbsentDays, data.WorkedDays);
 
-            return Ok();
+            return Ok(result);
         }
     }
 }

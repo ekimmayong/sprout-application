@@ -23,7 +23,6 @@ export class EmployeeCalculate extends Component {
 
   render() {
 
-    console.log(this.state)
     let contents = this.state.loading
     ? <p><em>Loading...</em></p>
     : <div>
@@ -99,13 +98,19 @@ export class EmployeeCalculate extends Component {
   async calculateSalary() {
     this.setState({ loadingCalculate: true });
     const token = await authService.getAccessToken();
+
+    let calculateData = {
+      absentDays: this.state.absentDays,
+      workedDays: this.state.workedDays
+    }
     const requestOptions = {
         method: 'POST',
         headers: !token ? {} : { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
-        body: JSON.stringify({absentDays: this.state.absentDays,workedDays: this.state.workedDays})
+        body: JSON.stringify(calculateData)
     };
     const response = await fetch('api/employees/' + this.state.id + '/calculate',requestOptions);
-    const data = await response.json();
+    const data = await response.text();
+    console.log(data)
     this.setState({ loadingCalculate: false,netIncome: data });
   }
 

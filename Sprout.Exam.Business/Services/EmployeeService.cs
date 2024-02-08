@@ -80,12 +80,19 @@ namespace Sprout.Exam.Business.Services
                 switch (employee.EmployeeTypeId)
                 {
                     case 1:
+                        // calculate regular salary with less absent and less 12% tax
                         var regularSalary = monthlySalary - ((monthlySalary / 22) * absentDays) - (monthlySalary * (decimal)0.12);
-                        return regularSalary;
+
+                        //Format value to 12,345.67
+                        var value = string.Format("{0:0,0.00}", Math.Round(regularSalary, 2));
+                        return value;
 
                     case 2:
+                        //Calculate Contractual salary. Total working days * daily salary fo 500
                         var contractualSalary = workedDays * dailySalary;
-                        return contractualSalary;
+
+                        //Format value to 12,345.67
+                        return string.Format("{0:0,0.00}", Math.Round(contractualSalary, 2));
 
                     default:
                         return "Employee Type not found";
