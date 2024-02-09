@@ -47,6 +47,12 @@ export default class AuthorizeRoute extends Component {
     async populateAuthenticationState() {
         const authenticated = await authService.isAuthenticated();
         this.setState({ ready: true, authenticated });
+        if(authenticated){
+            const tokenExpired = await authService.isTokenExpired();
+            if(tokenExpired){
+                await authService.signOut()
+            }
+        }
     }
 
     async authenticationChanged() {

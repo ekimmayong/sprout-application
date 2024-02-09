@@ -69,8 +69,11 @@ export class EmployeesIndex extends Component {
     const response = await fetch('api/employees', {
       headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
     });
-    const data = await response.json();
-    this.setState({ employees: data, loading: false });
+    
+    if(response.ok){
+      const data = await response.json();
+      this.setState({ employees: data, loading: false });
+    }
   }
 
   async deleteEmployee(id) {
