@@ -1,5 +1,8 @@
-﻿using Sprout.Exam.Business.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Sprout.Exam.Business.DataTransferObjects;
+using Sprout.Exam.Business.Interfaces;
 using Sprout.Exam.Business.Repositories;
+using Sprout.Exam.Common.Enums;
 using Sprout.Exam.DataAccess.Models;
 using System;
 using System.Collections.Generic;
@@ -69,30 +72,44 @@ namespace Sprout.Exam.Business.Services
             return "No update performed";
         }
 
-        public async Task<object> CalculateSalary(int employeeId, decimal absentDays, decimal workedDays)
+        public async Task<object> CalculateSalary(int employeeId, WorkAndAbsentDaysDto data)
         {
-            var employee = await _employeeRepository.GetByIdAsync(employeeId);
-            decimal monthlySalary = (decimal)20000.00;
+            var employee = await _employeeRepository.FindAsync(x => x.Id == employeeId, includeProperties: "EmployeeType").Result.FirstOrDefaultAsync();
+            decimal regularMonthlySalary = (decimal)20000.00;
+            decimal probationaryMonthlySalary = (decimal)18500.00;
             decimal dailySalary = (decimal)500.00;
+            decimal perHour = (decimal)70;
 
             if (employee != null)
             {
-                switch (employee.EmployeeTypeId)
+                switch (employee.EmployeeType.TypeName)
                 {
-                    case 1:
+                    case "Regular":
                         // calculate regular salary with less absent and less 12% tax
-                        var regularSalary = monthlySalary - ((monthlySalary / 22) * absentDays) - (monthlySalary * (decimal)0.12);
+                        var regularSalary = regularMonthlySalary - ((regularMonthlySalary / 22) * data.AbsentDays) - (regularMonthlySalary * (decimal)0.12);
 
                         //Format value to 12,345.67
                         var value = string.Format("{0:0,0.00}", Math.Round(regularSalary, 2));
                         return value;
 
-                    case 2:
+                    case "Contractual":
                         //Calculate Contractual salary. Total working days * daily salary fo 500
-                        var contractualSalary = workedDays * dailySalary;
+                        var contractualSalary = data.WorkedDays * dailySalary;
 
                         //Format value to 12,345.67
                         return string.Format("{0:0,0.00}", Math.Round(contractualSalary, 2));
+
+                    case "Probationary":
+                        var probationarySalary = probationaryMonthlySalary - ((probationaryMonthlySalary / 22) * data.AbsentDays) - (probationaryMonthlySalary * (decimal)0.12);
+
+                        //Format value to 12,345.67
+                        return string.Format("{0:0,0.00}", Math.Round(probationarySalary, 2));
+
+                    case "Part Time":
+                        var partTimeSalary = data.WorkingHours * perHour;
+
+                        //Format value to 12,345.67
+                        return string.Format("{0:0,0.00}", Math.Round(partTimeSalary));
 
                     default:
                         return "Employee Type not found";

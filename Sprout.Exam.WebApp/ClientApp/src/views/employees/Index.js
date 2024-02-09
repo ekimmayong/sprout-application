@@ -81,9 +81,7 @@ export class EmployeesIndex extends Component {
     };
     const response = await fetch('api/employees/' + id,requestOptions);
     if(response.status === 200){
-      this.setState({employees: this.state.employees.filter(function(employee) { 
-        return employee.id !== id
-      })});
+      this.populateEmployeeData();
     }
     else{
       alert("There was an error occured.");

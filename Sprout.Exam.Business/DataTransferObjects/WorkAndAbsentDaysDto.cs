@@ -10,5 +10,6 @@ namespace Sprout.Exam.Business.DataTransferObjects
     {
         public decimal WorkedDays { get; set; }
         public decimal AbsentDays { get; set; }
+        public decimal WorkingHours { get; set;}
     }
 }

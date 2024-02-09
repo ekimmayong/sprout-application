@@ -4,6 +4,7 @@ using Sprout.Exam.DataAccess.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,6 +44,17 @@ namespace Sprout.Exam.Business.Repositories
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await _context.SaveChangesAsync(cancellationToken);
+        }
+        public async Task<IQueryable<T>> FindAsync(Expression<Func<T, bool>> predicate, string includeProperties = "")
+        {
+            var query = _context.Set<T>().Where(predicate);
+
+            foreach (var includedProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includedProperty);
+            }
+
+            return query;
         }
 
         public Task UpdateAsync(T entity)

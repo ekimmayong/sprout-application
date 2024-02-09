@@ -24,11 +24,14 @@ namespace Sprout.Exam.DataAccess.Models
         public string TIN { get; set; }
 
         [Required]
+        [ForeignKey("EmployeeType")]
         [Column("EmployeeTypeId", TypeName = "int")]
         public int EmployeeTypeId { get; set; }
 
         [Required]
         [Column("IsDeleted", TypeName = "bit")]
         public bool IsDeleted { get; set; }
+
+        public virtual EmployeeType EmployeeType { get; set; }
     }
 }

@@ -110,7 +110,6 @@ export class EmployeeCalculate extends Component {
     };
     const response = await fetch('api/employees/' + this.state.id + '/calculate',requestOptions);
     const data = await response.text();
-    console.log(data)
     this.setState({ loadingCalculate: false,netIncome: data });
   }
 

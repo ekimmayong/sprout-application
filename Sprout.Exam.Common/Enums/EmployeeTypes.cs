@@ -4,9 +4,11 @@ using System.Text;
 
 namespace Sprout.Exam.Common.Enums
 {
-    public enum EmployeeType
+    public enum EmployeeTypes
     {
         Regular = 1,
-        Contractual = 2
+        Contractual = 2,
+        Probationary = 3,
+        PartTime = 4
     }
 }

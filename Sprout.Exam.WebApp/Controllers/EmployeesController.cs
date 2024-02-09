@@ -99,7 +99,7 @@ namespace Sprout.Exam.WebApp.Controllers
         [HttpPost("{id}/calculate")]
         public async Task<IActionResult> Calculate(int id, WorkAndAbsentDaysDto data)
         {
-            var result = await _employeeService.CalculateSalary(id, data.AbsentDays, data.WorkedDays);
+            var result = await _employeeService.CalculateSalary(id, data);
 
             return Ok(result);
         }
