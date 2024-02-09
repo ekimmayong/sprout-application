@@ -30,9 +30,13 @@ namespace Sprout.Exam.Business.Repositories
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(string includeProperties = "")
         {
             IQueryable<T> query = _context.Set<T>();
+            foreach (var includedProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includedProperty);
+            }
             return await query.AsNoTracking().ToListAsync();
         }
 

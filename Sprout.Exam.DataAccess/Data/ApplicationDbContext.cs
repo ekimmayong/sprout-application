@@ -29,6 +29,10 @@ namespace Sprout.Exam.DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<EmployeeType>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
             base.OnModelCreating(modelBuilder);
         }
     }

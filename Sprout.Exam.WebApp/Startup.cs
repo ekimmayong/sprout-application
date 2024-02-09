@@ -46,8 +46,10 @@ namespace Sprout.Exam.WebApp
 
             //Register Dependency injection
             services.AddScoped<IBaseRepository<Employee>, EmployeeRepository>();
+            services.AddScoped <IBaseRepository<EmployeeType>, EmployeeTypeRepository>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IEmployeeTypeService, EmployeeTypeService>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();

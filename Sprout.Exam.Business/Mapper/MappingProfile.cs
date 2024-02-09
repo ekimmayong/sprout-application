@@ -14,7 +14,8 @@ namespace Sprout.Exam.Business.Mapper
         public MappingProfile()
         {
             CreateMap<Employee, EmployeeDto>()
-                .ForMember(x => x.Birthdate, options => options.MapFrom(c => c.Birthdate.ToString("MM/dd/yyyy hh:mm tt")))
+                .ForMember(x => x.Birthdate, options => options.MapFrom(c => c.Birthdate.ToString("MM/dd/yyyy")))
+                .ForMember(x => x.TypeName, options => options.MapFrom(c => c.EmployeeType.TypeName))
                 .ForMember(x => x.TypeId, options => options.MapFrom(c => c.EmployeeTypeId));
 
             CreateMap<CreateEmployeeDto, Employee>()
@@ -24,6 +25,8 @@ namespace Sprout.Exam.Business.Mapper
             CreateMap<EditEmployeeDto, Employee>()
                 .ForMember(x => x.Birthdate, options => options.MapFrom(c => DateTime.Parse(c.Birthdate)))
                 .ForMember(x => x.EmployeeTypeId, options => options.MapFrom(c => c.TypeId));
+
+            CreateMap<EmployeeType, EmployeeTypeDto>().ReverseMap();
         }
     }
 }

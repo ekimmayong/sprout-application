@@ -6,10 +6,11 @@ export class EmployeeEdit extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { id: 0,fullName: '',birthdate: '',tin: '',typeId: 1, loading: true,loadingSave:false };
+    this.state = { id: 0,fullName: '',birthdate: '',tin: '',typeId: 1, loading: true,loadingSave:false, employeeTypes: [] };
   }
 
   componentDidMount() {
+    this.getEmployeeTypes();
     this.getEmployee(this.props.match.params.id);
   }
   handleChange(event) {
@@ -47,8 +48,13 @@ export class EmployeeEdit extends Component {
 <div className='form-group col-md-6'>
   <label htmlFor='inputEmployeeType4'>Employee Type: *</label>
   <select id='inputEmployeeType4' onChange={this.handleChange.bind(this)} value={this.state.typeId}  name="typeId" className='form-control'>
-    <option value='1'>Regular</option>
-    <option value='2'>Contractual</option>
+    {
+      this.state.employeeTypes !== null && Array.isArray(this.state.employeeTypes) && this.state.employeeTypes.length > 0 ?
+        this.state.employeeTypes.map((x, i) => 
+          <option key={i} value={x.id}>{x.typeName}</option> 
+        ):
+        <></>
+    }
   </select>
 </div>
 </div>
@@ -65,6 +71,17 @@ export class EmployeeEdit extends Component {
         {contents}
       </div>
     );
+  }
+
+  async getEmployeeTypes(){
+    const token = await authService.getAccessToken();
+    const response = await fetch('api/type/get-types', {
+      method: 'GET',
+      headers: !token ? {} : { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' }
+    });
+
+    const data = await response.json();
+    this.setState({employeeTypes: data})
   }
 
   async saveEmployee() {

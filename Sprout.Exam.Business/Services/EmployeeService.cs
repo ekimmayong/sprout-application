@@ -44,12 +44,13 @@ namespace Sprout.Exam.Business.Services
 
         public async Task<IEnumerable<Employee>> GetAllEmployees()
         {
-            return await _employeeRepository.GetAllAsync();
+            var response = await _employeeRepository.GetAllAsync(includeProperties: "EmployeeType");
+            return response;
         }
 
         public async Task<Employee> GetEmployeeById(int id)
         {
-            return await _employeeRepository.GetByIdAsync(id);
+            return await _employeeRepository.FindAsync(x => x.Id == id, includeProperties: "EmployeeType").Result.FirstOrDefaultAsync();
         }
 
         public async Task<string> UpdateEmployee(int id, Employee employee)
@@ -100,13 +101,13 @@ namespace Sprout.Exam.Business.Services
                         return string.Format("{0:0,0.00}", Math.Round(contractualSalary, 2));
 
                     case "Probationary":
-                        var probationarySalary = probationaryMonthlySalary - ((probationaryMonthlySalary / 22) * data.AbsentDays) - (probationaryMonthlySalary * (decimal)0.12);
+                        var probationarySalary = probationaryMonthlySalary - ((probationaryMonthlySalary / 22) * data.AbsentDays) - (probationaryMonthlySalary * (decimal)0.10);
 
                         //Format value to 12,345.67
                         return string.Format("{0:0,0.00}", Math.Round(probationarySalary, 2));
 
                     case "Part Time":
-                        var partTimeSalary = data.WorkingHours * perHour;
+                        var partTimeSalary = data.WorkedHours * perHour;
 
                         //Format value to 12,345.67
                         return string.Format("{0:0,0.00}", Math.Round(partTimeSalary));
