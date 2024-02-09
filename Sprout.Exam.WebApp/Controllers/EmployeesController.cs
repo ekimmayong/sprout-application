@@ -25,7 +25,7 @@ namespace Sprout.Exam.WebApp.Controllers
             _mapper = mapper;
         }
         /// <summary>
-        /// Refactor this method to go through proper layers and fetch from the DB.
+        /// Get all Employee data.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -38,7 +38,7 @@ namespace Sprout.Exam.WebApp.Controllers
         }
 
         /// <summary>
-        /// Refactor this method to go through proper layers and fetch from the DB.
+        /// Query data by id.
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
@@ -50,7 +50,7 @@ namespace Sprout.Exam.WebApp.Controllers
         }
 
         /// <summary>
-        /// Refactor this method to go through proper layers and update changes to the DB.
+        /// Update Employee data.
         /// </summary>
         /// <returns></returns>
         [HttpPut("{id}")]
@@ -63,7 +63,7 @@ namespace Sprout.Exam.WebApp.Controllers
         }
 
         /// <summary>
-        /// Refactor this method to go through proper layers and insert employees to the DB.
+        /// Create new Employee.
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -77,7 +77,7 @@ namespace Sprout.Exam.WebApp.Controllers
 
 
         /// <summary>
-        /// Refactor this method to go through proper layers and perform soft deletion of an employee to the DB.
+        /// Delete Employee data from DB.
         /// </summary>
         /// <returns></returns>
         [HttpDelete("{id}")]
@@ -93,8 +93,7 @@ namespace Sprout.Exam.WebApp.Controllers
         /// Refactor this method to go through proper layers and use Factory pattern
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="absentDays"></param>
-        /// <param name="workedDays"></param>
+        /// <param name="WorkAndAbsentDaysDto"></param>
         /// <returns></returns>
         [HttpPost("{id}/calculate")]
         public async Task<IActionResult> Calculate(int id, WorkAndAbsentDaysDto data)
