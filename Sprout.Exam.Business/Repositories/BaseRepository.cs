@@ -49,7 +49,7 @@ namespace Sprout.Exam.Business.Repositories
         {
             return await _context.SaveChangesAsync(cancellationToken);
         }
-        public async Task<IQueryable<T>> FindAsync(Expression<Func<T, bool>> predicate, string includeProperties = "")
+        public IQueryable<T> Find(Expression<Func<T, bool>> predicate, string includeProperties = "")
         {
             var query = _context.Set<T>().Where(predicate);
 

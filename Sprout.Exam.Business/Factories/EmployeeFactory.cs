@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sprout.Exam.Business.Factories
 {
-    public class EmployeeFactory
+    public class EmployeeFactory: IEmployeeFactory
     {
         public ISalaryCalculator CreateSalaryCalculator(string employeeType)
         {

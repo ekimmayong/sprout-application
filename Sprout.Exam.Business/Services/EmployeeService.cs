@@ -16,9 +16,11 @@ namespace Sprout.Exam.Business.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IBaseRepository<Employee> _employeeRepository;
-        public EmployeeService(IBaseRepository<Employee> employeeRepository)
+        private readonly IEmployeeFactory _employeeFactory;
+        public EmployeeService(IBaseRepository<Employee> employeeRepository, IEmployeeFactory employeeFactory)
         {
             _employeeRepository = employeeRepository;
+            _employeeFactory = employeeFactory;
         }
 
         public async Task<Employee> CreateNewEmployee(Employee employee)
@@ -51,7 +53,7 @@ namespace Sprout.Exam.Business.Services
 
         public async Task<Employee> GetEmployeeById(int id)
         {
-            return await _employeeRepository.FindAsync(x => x.Id == id, includeProperties: "EmployeeType").Result.FirstOrDefaultAsync();
+            return await _employeeRepository.Find(x => x.Id == id, includeProperties: "EmployeeType").FirstOrDefaultAsync();
         }
 
         public async Task<string> UpdateEmployee(int id, Employee employee)
@@ -74,14 +76,14 @@ namespace Sprout.Exam.Business.Services
             return "No update performed";
         }
 
-        public async Task<object> CalculateSalary(int employeeId, WorkAndAbsentDaysDto data)
+        public async Task<string> CalculateSalary(int employeeId, WorkAndAbsentDaysDto data)
         {
-            var employee = await _employeeRepository.FindAsync(x => x.Id == employeeId, includeProperties: "EmployeeType").Result.FirstOrDefaultAsync();
-
+            var employee = _employeeRepository.Find(x => x.Id == employeeId, includeProperties: "EmployeeType");
+            
             if (employee != null)
             {
-                var employeeFactory = new EmployeeFactory();
-                var calculateSalary = employeeFactory.CreateSalaryCalculator(employee.EmployeeType.TypeName);
+                var result = employee.First();
+                var calculateSalary = _employeeFactory.CreateSalaryCalculator(result.EmployeeType.TypeName);
                 return await calculateSalary.CalculateSalary(data);
             }
 

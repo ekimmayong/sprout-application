@@ -15,6 +15,6 @@ namespace Sprout.Exam.Business.Interfaces
         Task<Employee> CreateNewEmployee(Employee employee);
         Task<string> DeleteEmployee(int id);
         Task<string> UpdateEmployee(int id, Employee employee);
-        Task<object> CalculateSalary(int employeeId, WorkAndAbsentDaysDto data);
+        Task<string> CalculateSalary(int employeeId, WorkAndAbsentDaysDto data);
     }
 }

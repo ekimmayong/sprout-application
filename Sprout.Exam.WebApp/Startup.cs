@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Sprout.Exam.Business.Factories;
 using Sprout.Exam.Business.Interfaces;
 using Sprout.Exam.Business.Repositories;
 using Sprout.Exam.Business.Services;
@@ -50,6 +51,7 @@ namespace Sprout.Exam.WebApp
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IEmployeeTypeService, EmployeeTypeService>();
+            services.AddScoped<IEmployeeFactory, EmployeeFactory>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
